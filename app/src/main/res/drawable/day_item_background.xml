@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái được chọn -->
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="#2196F3" /> <!-- Màu khi chọn (màu xanh) -->
+            <stroke android:width="1dp" android:color="#1976D2" />
+        </shape>
+    </item>
+    <!-- Trạng thái không thể chọn (trước ngày hiện tại) -->
+    <item android:state_enabled="false">
+        <shape android:shape="oval">
+            <solid android:color="#CCCCCC" /> <!-- Màu xám -->
+            <stroke android:width="1dp" android:color="#BBBBBB" />
+        </shape>
+    </item>
+    <!-- Trạng thái bình thường (có thể chọn) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="1dp" android:color="#CCCCCC" />
+        </shape>
+    </item>
+</selector>
