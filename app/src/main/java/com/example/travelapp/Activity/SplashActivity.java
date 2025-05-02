@@ -2,7 +2,6 @@ package com.example.travelapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travelapp.SharedPrefsHelper;
 import com.google.firebase.auth.FirebaseAuth;
