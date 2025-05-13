@@ -1,13 +1,12 @@
 package com.example.travelapp.Fragment;
 
-import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -19,9 +18,7 @@ import com.example.travelapp.Adapter.RecommendedAdapter;
 import com.example.travelapp.Adapter.SliderAdapter;
 import com.example.travelapp.Domain.Category;
 import com.example.travelapp.Domain.ItemDomain;
-import com.example.travelapp.Domain.Location;
 import com.example.travelapp.Domain.SliderItems;
-import com.example.travelapp.R;
 import com.example.travelapp.databinding.FragmentHomeBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private FirebaseDatabase database;
@@ -210,8 +208,8 @@ public class HomeFragment extends Fragment {
             binding.viewPagerSlider.setOffscreenPageLimit(3);
             binding.viewPagerSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
-            androidx.viewpager2.widget.CompositePageTransformer compositePageTransformer = new androidx.viewpager2.widget.CompositePageTransformer();
-            compositePageTransformer.addTransformer(new androidx.viewpager2.widget.MarginPageTransformer(40));
+            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+            compositePageTransformer.addTransformer(new MarginPageTransformer(40));
             binding.viewPagerSlider.setPageTransformer(compositePageTransformer);
         }
     }
