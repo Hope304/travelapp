@@ -32,7 +32,6 @@ public class BookingDetailActivity extends BaseActivity {
         TextView detailTimeTour = findViewById(R.id.detail_time_tour);
         TextView detailTourGuideName = findViewById(R.id.detail_tour_guide_name);
         TextView detailTourGuidePhone = findViewById(R.id.detail_tour_guide_phone);
-
         ImageView detailImage = findViewById(R.id.detail_image);
         ImageView detailTourGuideImage = findViewById(R.id.detail_tour_guide_image);
 
