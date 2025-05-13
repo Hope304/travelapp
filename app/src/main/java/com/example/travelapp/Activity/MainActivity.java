@@ -4,16 +4,17 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.travelapp.Fragment.BookingFragment;
 import com.example.travelapp.Fragment.WishlistFragment;
-import com.example.travelapp.Fragment.ExplorerFragment;
 import com.example.travelapp.Fragment.HomeFragment;
 import com.example.travelapp.Fragment.LoginFragment;
 import com.example.travelapp.Fragment.ProfileFragment;
 import com.example.travelapp.R;
 import com.example.travelapp.SharedPrefsHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
-
 
 public class MainActivity extends BaseActivity {
     private SharedPrefsHelper prefsHelper;
@@ -26,18 +27,19 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         prefsHelper = new SharedPrefsHelper(this);
         mAuth = FirebaseAuth.getInstance();
-        // Khởi tạo ChipNavigationBar
         bottomNav = findViewById(R.id.bottom_nav);
+
+        // Kiểm tra và đồng bộ trạng thái đăng nhập
+        syncLoginState();
+
         updateNavigationMenu();
-        // Đặt sự kiện cho ChipNavigationBar
         bottomNav.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
             @Override
             public void onItemSelected(int id) {
-                // Gọi hàm loadFragment với các fragment tương ứng khi chọn item
                 if (id == R.id.homebtn) {
                     loadFragment(new HomeFragment());
-                } else if (id == R.id.explorer) {
-                    loadFragment(new ExplorerFragment());
+                } else if (id == R.id.booking) {
+                    loadFragment(new BookingFragment());
                 } else if (id == R.id.bookmark) {
                     loadFragment(new WishlistFragment());
                 } else if (id == R.id.profile) {
@@ -48,10 +50,21 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Thiết lập mặc định cho fragment khi ứng dụng khởi động
         if (savedInstanceState == null) {
-            bottomNav.setItemSelected(R.id.homebtn, true); // Chọn Home mặc định
-            loadFragment(new HomeFragment()); // Hiển thị HomeFragment khi ứng dụng bắt đầu
+            bottomNav.setItemSelected(R.id.homebtn, true);
+            loadFragment(new HomeFragment());
+        }
+    }
+
+    private void syncLoginState() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        boolean isLoggedInInPrefs = prefsHelper.isLoggedIn();
+        if (!isLoggedInInPrefs && currentUser != null) {
+            // Trường hợp hiếm: SharedPrefs chưa cập nhật nhưng Firebase có user
+            prefsHelper.setLoggedIn(true);
+        } else if (isLoggedInInPrefs && currentUser == null) {
+            // Trường hợp hiện tại: SharedPrefs ghi nhận đăng nhập nhưng Firebase không có user
+            prefsHelper.clearLogin();
         }
     }
 
@@ -63,17 +76,16 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    // Hàm loadFragment dùng để thay đổi fragment
     public void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment) // Thay thế nội dung trong fragment_container
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Cập nhật menu khi quay lại activity
+        syncLoginState(); // Đồng bộ trạng thái khi quay lại activity
         updateNavigationMenu();
     }
 }
