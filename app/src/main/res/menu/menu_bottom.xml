@@ -8,9 +8,9 @@
         app:cnb_backgroundColor="@color/blue"
         app:cnb_iconColor="@color/white" />
     <item
-        android:id="@+id/explorer"
+        android:id="@+id/booking"
         android:icon="@drawable/bottom_btn2"
-        android:title="Explorer"
+        android:title="Booking"
         app:cnb_backgroundColor="@color/blue"
         app:cnb_iconColor="@color/white" />
     <item
