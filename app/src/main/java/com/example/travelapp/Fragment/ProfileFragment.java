@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.travelapp.Activity.MainActivity;
 import com.example.travelapp.R;
+import com.example.travelapp.SharedPrefsHelper;
 import com.example.travelapp.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +30,7 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference dbRef;
     private String userId;
     private ChipNavigationBar bottomNav;
+    private SharedPrefsHelper prefsHelper;
 
     @Nullable
     @Override
@@ -38,15 +40,21 @@ public class ProfileFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference("users");
+        prefsHelper = new SharedPrefsHelper(requireContext());
+
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             userId = user.getUid();
         } else {
             Log.e("ProfileFragment", "User not logged in");
+            prefsHelper.clearLogin();
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new LoginFragment())
+                    .commit();
             return view;
         }
 
-        // Lấy tham chiếu đến ChipNavigationBar từ MainActivity
         bottomNav = getActivity().findViewById(R.id.bottom_nav);
         if (bottomNav == null) {
             Log.e("ProfileFragment", "ChipNavigationBar not found in MainActivity");
@@ -54,10 +62,26 @@ public class ProfileFragment extends Fragment {
 
         loadUserProfile();
 
-        binding.bookingItem.setOnClickListener(v -> navigateToBooking());
-        binding.wishlistItem.setOnClickListener(v -> navigateToWishlist());
-        binding.editProfileItem.setOnClickListener(v -> navigateToEditProfile());
-        binding.logoutItem.setOnClickListener(v -> logout());
+        if (binding.bookingItem != null) {
+            binding.bookingItem.setOnClickListener(v -> navigateToBooking());
+        } else {
+            Log.e("ProfileFragment", "bookingItem is null");
+        }
+        if (binding.wishlistItem != null) {
+            binding.wishlistItem.setOnClickListener(v -> navigateToWishlist());
+        } else {
+            Log.e("ProfileFragment", "wishlistItem is null");
+        }
+        if (binding.editProfileItem != null) {
+            binding.editProfileItem.setOnClickListener(v -> navigateToEditProfile());
+        } else {
+            Log.e("ProfileFragment", "editProfileItem is null");
+        }
+        if (binding.logoutItem != null) {
+            binding.logoutItem.setOnClickListener(v -> logout());
+        } else {
+            Log.e("ProfileFragment", "logoutItem is null");
+        }
 
         return view;
     }
@@ -124,10 +148,19 @@ public class ProfileFragment extends Fragment {
 
     private void logout() {
         mAuth.signOut();
+        prefsHelper.clearLogin();
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, new LoginFragment())
                 .commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (binding != null) {
+            binding.getRoot().requestFocus();
+        }
     }
 
     @Override
