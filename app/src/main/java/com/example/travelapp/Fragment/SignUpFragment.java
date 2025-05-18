@@ -110,6 +110,8 @@ public class SignUpFragment extends Fragment {
                                                         .addOnSuccessListener(aVoid -> {
                                                             progressBar.setVisibility(View.GONE);
                                                             prefsHelper.setLoggedIn(true);
+                                                            Toast.makeText(getContext(), "Sign-up successful!", Toast.LENGTH_SHORT).show();
+                                                            ((MainActivity) requireActivity()).loadFragment(new LoginFragment());
                                                         })
                                                         .addOnFailureListener(e -> {
                                                             progressBar.setVisibility(View.GONE);
